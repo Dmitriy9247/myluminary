@@ -13,7 +13,6 @@ import Pagination from '~/components/features/pagination';
 import PostOne from '~/components/features/post/post-one';
 import BlogSidebar from '~/components/partials/post/blog-sidebar';
 import { blogs } from '~/utils/data/tempdata';
-
 import { scrollTopHandler } from '~/utils';
 
 function Classic () {
@@ -22,20 +21,15 @@ function Classic () {
     const query = router.query;
     const showingCount = 8;
     const [ getPosts, { data, loading, error } ] = useLazyQuery( GET_POSTS );
+    
     const [ perPage, setPerPage ] = useState( showingCount );
-    const posts = blogs;
-    const totalPage = data ? parseInt( data.posts.total / perPage ) + ( data.posts.total % perPage ? 1 : 0 ) : 1;
+    const [posts, setPosts] = useState([]);
+    // const totalPage = data ? parseInt( data.posts.total / perPage ) + ( data.posts.total % perPage ? 1 : 0 ) : 1;
     let page = query.page ? query.page : 1;
 
     useEffect( () => {
-        getPosts( {
-            variables: {
-                category: query.category,
-                from: perPage * ( page - 1 ),
-                to: perPage * page
-            }
-        } );
-
+        getPosts();
+        setPosts(data?.posts);
         setTimeout( () => {
             if ( isFirst ) {
                 setFirst( false );
@@ -43,7 +37,7 @@ function Classic () {
                 scrollTopHandler();
             }
         }, 100 );
-    }, [ query ] )
+    }, [ data, loading, error ] )
 
     return (
         <main className="main skeleton-body">
@@ -87,7 +81,7 @@ function Classic () {
                                 }
                             </div>
 
-                            <Pagination totalPage={ totalPage } />
+                            {/* <Pagination totalPage={ totalPage } /> */}
                         </div>
 
                         <BlogSidebar />

@@ -11,6 +11,13 @@ export default {
                 throw e;
             }
         },
+        post: async (_parent, _args, _context, _infor) => {
+            try {
+                return await Post.findOne(_args);
+            } catch (e) {
+                throw e;
+            }
+        },
         posts: async (_parent, _args, _context, _info) => {
             try {
                 return await Post.find();
@@ -20,14 +27,6 @@ export default {
         }
     },
     Post : {
-        author: async (_parent, _args, _context, _info) => {
-            try {
-                const _id = _parent.author
-                return await User.findById(_id)
-            } catch (e) {
-                throw new Error ("Failed to get author.")
-            }
-        },
         main_image: async (_parent, _args, _context, _info) => {
             try {
                 const _id = _parent.main_image
@@ -44,6 +43,10 @@ export default {
             } catch (e) {
                 throw e;
             }
+        },
+        updatePost: async(_parent, _args, _context, _info) => {
+            const updatedPost = await Post.findByIdAndUpdate({_id:_args._id}, {$set:{..._args.input}})
+            return updatedPost
         },
         deletePost: async(_parent, _args, _context, _info) => {
             try {

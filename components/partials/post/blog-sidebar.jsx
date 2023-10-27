@@ -1,9 +1,10 @@
-import { useQuery } from "@apollo/react-hooks";
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from "@apollo/react-hooks";
 import { useRouter } from 'next/router';
 import StickyBox from 'react-sticky-box';
 
 import withApollo from '~/server/apolloClient';
-import { GET_POST_SIDEBAR_DATA } from '~/server/queries';
+import { GET_POSTS } from '~/server/queries';
 
 import ALink from '~/components/features/custom-link';
 import Card from '~/components/features/accordion/card';
@@ -12,11 +13,18 @@ import PostTwo from '~/components/features/post/post-two';
 import { postSidebarData } from "~/utils/data/tempdata";
 
 function BlogSidebar() {
-    const { data, loading, error } = useQuery( GET_POST_SIDEBAR_DATA );
+    const [ getPosts, { data, loading, error } ] = useLazyQuery( GET_POSTS );
     const categories = postSidebarData.categories;
     const recent = postSidebarData.recent;
     const router = useRouter();
     const query = router.query;
+    const [posts, setPosts] = useState([]);
+
+    useEffect( () => {
+        getPosts();
+        setPosts(data?.posts);
+    }, [ data, loading, error ] )
+
     const toggleSidebarHandler = ( e ) => {
         document.querySelector( 'body' ).classList.toggle( 'right-sidebar-active' );
     }
@@ -52,7 +60,7 @@ function BlogSidebar() {
                                     </form>
                                 </div>
 
-                                <div className="widget widget-collapsible border-no">
+                                {/* <div className="widget widget-collapsible border-no">
                                     <Card
                                         title="<h3 class='widget-title border-no'>Blog Categories<span class='toggle-btn p-0 parse-content'></span></h3>"
                                         type="parse"
@@ -66,7 +74,7 @@ function BlogSidebar() {
                                             <li className={ `${ query.category === 'travel' ? 'active' : '' }` }><ALink href={ { pathname: '/blog/classic', query: { category: 'travel' } } } scroll={ false }>Travel</ALink></li>
                                         </ul>
                                     </Card>
-                                </div>
+                                </div> */}
 
                                 <div className="widget widget-collapsible">
                                     <Card
@@ -76,7 +84,7 @@ function BlogSidebar() {
                                     >
                                         <ul className="widget-body">
                                             {
-                                                recent.slice( 0, 3 ).map( ( post, index ) => (
+                                                posts?.slice( 0, 3 ).map( ( post, index ) => (
                                                     <div className="post-col" key={ "Small Post " + index }>
                                                         <PostTwo post={ post } />
                                                     </div>
@@ -86,7 +94,7 @@ function BlogSidebar() {
                                     </Card>
                                 </div>
 
-                                <div className="widget widget-collapsible">
+                                {/* <div className="widget widget-collapsible">
                                     <Card
                                         title="<h3 class='widget-title'>About us<span class='toggle-btn p-0 parse-content'></span></h3>"
                                         type="parse"
@@ -116,7 +124,7 @@ function BlogSidebar() {
                                             <ALink href="#" className="tag">Women</ALink>
                                         </ul>
                                     </Card>
-                                </div>
+                                </div> */}
                             </> : <div className="widget-2"></div>
                     }
                 </div>

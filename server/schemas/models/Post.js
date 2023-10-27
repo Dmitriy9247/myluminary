@@ -15,10 +15,17 @@ const Post = mongoose.models.Post || mongoose.model('Post', new mongoose.Schema(
         required: true
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
         required: true
     },
+    postType : {
+        type: String,
+        required: true
+    },
+    slug : {
+        type : String,
+        required: true
+    }
 }, {timestamps: true}));
 
 module.exports = Post;

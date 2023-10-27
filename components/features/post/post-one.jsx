@@ -4,35 +4,35 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import ALink from '~/components/features/custom-link';
 import OwlCarousel from '~/components/features/owl-carousel';
 
+import { storjImage } from '~/server/StorjService';
 import { videoHandler } from '~/utils';
 import { mainSlider20 } from '~/utils/data/carousel';
 
 function PostOne ( props ) {
     const { post, adClass = 'mb-7', isLazy = false, isOriginal = false, btnText = "Read more", btnAdClass = '', isButton = true } = props;
-
     return (
-        <div className={ `post post-classic ${ post.type === 'video' ? 'post-video' : '' } ${ adClass }` }>
+        <div className={ `post post-classic ${ post.postType === 'video' ? 'post-video' : '' } ${ adClass }` }>
             {
-                post.type === 'image' || post.type === 'video' ?
-                    <figure className={ `post-media ${ post.type === 'image' ? 'overlay-zoom' : '' }` }>
+                post.postType === 'image' || post.postType === 'video' ?
+                    <figure className={ `post-media ${ post.postType === 'image' ? 'overlay-zoom' : '' }` }>
                         {
                             isLazy ?
                                 <ALink href={ `/blog/single/${ post.slug }` }>
                                     {
                                         isOriginal ? <LazyLoadImage
-                                            src={ post.large_picture[ 0 ].url }
+                                            src={ storjImage(post.main_image.bucket, post.main_image.key) }
                                             alt="post image"
                                             width={ 100 }
-                                            height={ post.large_picture[ 0 ].height }
+                                            height={ 100 }
                                             effect="opacity; transform"
                                             style={ { backgroundColor: "#DEE6E8" } }
                                         />
                                             :
                                             <LazyLoadImage
-                                                src={ post.picture[ 0 ].url }
+                                                src={ storjImage(post.main_image.bucket, post.main_image.key) }
                                                 alt="post image"
-                                                width={ post.picture[ 0 ].width }
-                                                height={ post.picture[ 0 ].height }
+                                                width={ 100 }
+                                                height={ 100 }
                                                 effect="opacity; transform"
                                                 style={ { backgroundColor: "#DEE6E8" } }
                                             />
@@ -42,17 +42,17 @@ function PostOne ( props ) {
                                 <ALink href={ `/blog/single/${ post.slug }` }>
                                     {
                                         isOriginal ? <img
-                                            src={ post.large_picture[ 0 ].url }
+                                            src={ storjImage(post.main_image.bucket, post.main_image.key) }
                                             alt="post image"
                                             width={ 100 }
-                                            height={ post.large_picture[ 0 ].height }
+                                            height={ 100 }
                                         /> :
 
                                             <img
-                                                src={ post.picture[ 0 ].url }
+                                                src={ storjImage(post.main_image.bucket, post.main_image.key) }
                                                 alt="post image"
-                                                width={ post.picture[ 0 ].width }
-                                                height={ post.picture[ 0 ].height }
+                                                width={ 100 }
+                                                height={ 100 }
                                             />
                                     }
                                 </ALink>
@@ -78,8 +78,8 @@ function PostOne ( props ) {
                                                 src={ process.env.NEXT_PUBLIC_ASSET_URI + item.url }
                                                 alt="post gallery"
                                                 key={ item.title + '-' + index }
-                                                width={ item.width }
-                                                height={ item.height }
+                                                width={ 100 }
+                                                height={ 100 }
                                                 effect="opacity; transform"
                                                 style={ { backgroundColor: "#DEE6E8" } }
                                             />
@@ -93,8 +93,8 @@ function PostOne ( props ) {
                                                 src={ process.env.NEXT_PUBLIC_ASSET_URI + item.url }
                                                 alt="post gallery"
                                                 key={ item.title + '-' + index }
-                                                width={ item.width }
-                                                height={ item.height }
+                                                width={ 100 }
+                                                height={ 100 }
                                             />
                                         ) }
                                 </OwlCarousel>
@@ -104,7 +104,7 @@ function PostOne ( props ) {
 
             <div className="post-details">
                 <div className="post-meta">
-                    by <ALink href="#" className="post-author">{ post.author }</ALink> on <ALink href="#" className="post-date">{ new Date( post.date ).toLocaleDateString( 'en-US', { year: 'numeric', month: 'short', day: "2-digit", timeZone: "UTC" } ) }</ALink> | <ALink href="#" className="post-comment"><span>{ post.comments }</span> Comments</ALink>
+                    by <ALink href="#" className="post-author">{ post.author }</ALink> on <ALink href="#" className="post-date">{ new Date( Number(post.createdAt) ).toLocaleDateString( 'en-US', { year: 'numeric', month: 'short', day: "2-digit", timeZone: "UTC" } ) }</ALink>
                 </div>
                 <h4 className="post-title">
                     <ALink href={ `/blog/single/${ post.slug }` }>{ post.title }</ALink>

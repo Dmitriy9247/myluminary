@@ -405,115 +405,42 @@ export const GET_SHOP_SIDEBAR_DATA = gql`
 `
 
 export const GET_POSTS = gql`
-    query posts($category: String, $from: Int, $to: Int, $categories: [String]) {
-        posts(demo: ${currentDemo }, category: $category, from: $from, to: $to, categories: $categories ) {
-            data {
-                title
-                slug
-                date
-                comments
-                content
-                type
-                author
-                large_picture {
-                    url
-                    width
-                    height
-                }
-                picture {
-                    url
-                    width
-                    height
-                }
-                small_picture {
-                    url
-                    width
-                    height
-                }
-                video {
-                    url
-                    width
-                    height
-                }
+    query Posts {
+        posts {
+            _id
+            title
+            author
+            main_image {
+                _id,
+                bucket,
+                key
             }
-            total
+            content
+            postType
+            createdAt
+            slug
         }
     }
 `
 
 export const GET_POST = gql`
-    query post($slug: String!) {
-        post(demo: ${currentDemo }, slug: $slug) {
-            data {
-                title
-                slug
-                author
-                date
-                comments
-                content
-                type
-                large_picture {
-                    url
-                    width
-                    height
-                }
-                picture {
-                    url
-                    width
-                    height
-                }
-                video {
-                    url
-                    width
-                    height
-                }
-                categories {
-                    name
-                    slug
-                }
-            }
-            related {
-                title
-                slug
-                date
-                type
-                comments
-                content
-                picture {
-                    url
-                    width
-                    height
-                }
-                video {
-                    url
-                    width
-                    height
-                }
-            }
-        }
+query Posts($slug:String!) {
+    post(slug:$slug) {
+      _id
+      title
+      author
+      main_image {
+        _id
+        bucket
+        key
+      }
+      content
+      postType
+      createdAt
+      slug
     }
-`
-
-export const GET_POST_SIDEBAR_DATA = gql`
-    query postSidbarData {
-        postSidebarData(demo: ${currentDemo }) {
-            categories {
-                name
-                slug
-            }
-            recent {
-                title
-                slug
-                date
-                small_picture {
-                    url
-                    width
-                    height
-                }
-            }
-        }
-    }
-`
+}
+`;
 
 export const GET_HOME_DATA = gql`
     query indexData($productsCount: Int, $postsCount: Int) {
